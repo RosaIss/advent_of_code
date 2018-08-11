@@ -1,2 +1,5 @@
-# advent_of_code
+# Advent of code
+
 Solutions to advent of code's challenges
+
+adventofcode.com
