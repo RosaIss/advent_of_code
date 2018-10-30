@@ -53,16 +53,6 @@ def apply_class1(mov1, mov2):
         step_type[mov1] = 0
 
 
-def apply_class2(mov1, mov2):
-    if step_type[mov1] == 0 or step_type[mov2] == 0:
-        return
-
-    if step_type[mov1] > step_type[mov2]:
-        step_type[mov2] = 0
-    else:
-        step_type[mov1] = 0
-
-
 def add_to_total_steps(mov):
     total_steps = 0
     step_type[mov] += 1
