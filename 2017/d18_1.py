@@ -1,6 +1,26 @@
+"""--- Day 18: Duet ---"""
 
 import sys
 import time
+
+class Program():
+
+    def __init__(self):
+        self.ltrs = {}
+        self.rcv_queue = deque()
+        self.sended_val = 0
+        self.c = 0
+
+def get_val_opd(opd, ltrs):
+    if opd[0] == "-":
+        return -int(opd[1:]) 
+    elif opd.isdigit():
+        return int(opd)
+    elif opd in ltrs:
+        return ltrs[opd]
+    
+    return 0
+
 
 def execute_instructions(instructions):
     ins = None 
@@ -18,22 +38,21 @@ def execute_instructions(instructions):
         c += 1
 
         if opt == "snd":
-            last_snd = lts[opd1]            
+            opd1 = get_val_opd(ins[1], lts)
+            last_snd = opd1            
             continue            
 
         if opt == "rcv" and opd1 != 0:
-            return last_snd
+            if get_val_opd(ins[1], lts) != 0:
+                return last_snd
+            continue
 
-        opd2 = ins[2]
-        if opd2[0] == "-":
-            opd2 = 0 - int(opd2[1:]) 
-        elif opd2.isdigit():
-            opd2 = int(opd2)
-        else:
-            opd2 = int(lts[opd2])
+        opd2 = get_val_opd(ins[2], lts)
 
-        if opt == "jgz" and lts[opd1] > 0:
-            c += opd2 - 1
+        if opt == "jgz":
+            opd1 = get_val_opd(ins[1], lts)
+            if opd1 > 0:
+                c += opd2 - 1
             continue
 
         if opt == "set":
