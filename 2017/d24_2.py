@@ -1,4 +1,4 @@
-"""--- Day 24: Electromagnetic Moat ---"""
+"""--- Day 24: Electromagnetic Moat part 2---"""
 
 import sys
 
@@ -14,23 +14,27 @@ class Comp():
         self.strength = sum(map(int, ports))
 
 
-def find_strongest_bridge(comps, visited_comps, comp):
-    strength = 0
-    max_strength = comp.strength
-    max_bridge = (comp.key,)
+def find_longest_bridge(comps, visited_comps, comp):
+    max_length = 1
+    strength = comp.strength
+    bridge = (comp.key,)
 
     visited_comps[comp.key][0] = True
     for c in comps[comp.free_port]:
         if visited_comps[c.key][0]:
             continue
-
-        strength, sub_bridge = find_strongest_bridge(comps, visited_comps, c)
-        if max_strength < strength + comp.strength:
-            max_bridge = (comp.key,) + sub_bridge
-            max_strength = comp.strength + strength
+        new_strength, sub_bridge = find_longest_bridge(comps,
+                                                         visited_comps,
+                                                         c)
+        length = len(sub_bridge) + 1 
+        if max_length < length or \
+           (max_length == length and comp.strength + new_strength > strength):
+            strength = comp.strength + new_strength
+            bridge = (comp.key,) + sub_bridge
+            max_length = length
     visited_comps[comp.key][0] = False
 
-    return max_strength, max_bridge
+    return strength, bridge
 
 
 def add_comp_to_comps(comps, visited_comps, comp):
@@ -62,11 +66,11 @@ def main():
     for comp in sys.stdin:
         add_comp_to_comps(comps, visited_comps, comp[:-1])
 
-    strength, bridge = find_strongest_bridge(comps, visited_comps, start_comp)
-    print "Max strength: {}".format(strength)             
-    print "Bridge: "
+    strength, bridge = find_longest_bridge(comps, visited_comps, start_comp)
+    print "Max length: {}".format(len(bridge))             
+    print "Strength: {}".format(strength)             
+    print "Bridge:"             
     print bridge
-
 
 if __name__ == "__main__":
     main()
